@@ -6,6 +6,7 @@ import mongoose from "mongoose"
 import bodyParser from 'body-parser';
 import authController from "./controller/authAccessorController.js"
 import newsController from "./controller/newsAccessorContorller.js"
+import userController from "./controller/userAccessorController.js"
 
 dotenv.config()
 
@@ -22,6 +23,7 @@ accessorApp.use(bodyParser.json({ type: 'application/*+json' }));
 
 accessorApp.use('/auth', authController)
 accessorApp.use('/news', newsController)
+accessorApp.use('/user', userController)
 
 
 accessorApp.listen(process.env.PORT_ACCESSOR, async () => {
