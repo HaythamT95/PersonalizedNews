@@ -5,6 +5,7 @@ import morgan from "morgan"
 import mongoose from "mongoose"
 import bodyParser from 'body-parser';
 import authController from "./controller/authAccessorController.js"
+import newsController from "./controller/newsAccessorContorller.js"
 
 dotenv.config()
 
@@ -20,6 +21,8 @@ accessorApp.use(m("dev"))
 accessorApp.use(bodyParser.json({ type: 'application/*+json' }));
 
 accessorApp.use('/auth', authController)
+accessorApp.use('/news', newsController)
+
 
 accessorApp.listen(process.env.PORT_ACCESSOR, async () => {
     console.log(`server running on port ${process.env.PORT_ACCESSOR}`);
