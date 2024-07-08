@@ -71,6 +71,7 @@ userController.delete('/delete-preferences/:id', async (req, res) => {
     try {
         const userID = req.params.id;
         const { type, preferences } = req.body;
+        console.log(type, " ", preferences)
 
         const user = await deletePreference(userID, type, preferences);
         logger.info(`${req.method}-${req.originalUrl}`)

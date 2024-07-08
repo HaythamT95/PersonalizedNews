@@ -7,37 +7,6 @@ const authController = express.Router();
 authController.post('/register', async (req, res) => {
     const { firstName, lastName, email, password } = req.body;
 
-    if (!firstName) {
-        logger.error(`${req.method}-${req.originalUrl}: firstName is required`)
-        return res.status(400).json({
-            error: "firstName is required",
-        });
-    }
-
-    if (!lastName) {
-        logger.error(`${req.method}-${req.originalUrl}: lastName is required`)
-
-        return res.status(400).json({
-            error: "lastName is required",
-        });
-    }
-
-    if (!email) {
-        logger.error(`${req.method}-${req.originalUrl}: email is required`)
-
-        return res.status(400).json({
-            error: "email is required",
-        });
-    }
-
-    if (!password) {
-        logger.error(`${req.method}-${req.originalUrl}: password is required`)
-
-        return res.status(400).json({
-            error: "password is required",
-        });
-    }
-
     try {
         const user = await createUser({ firstName, lastName, email, password });
 
@@ -58,22 +27,6 @@ authController.post('/register', async (req, res) => {
 
 authController.post('/login', async (req, res) => {
     const { email, password } = req.body;
-
-    if (!email) {
-        logger.error(`${req.method}-${req.originalUrl}: email is required`)
-
-        return res.status(400).json({
-            error: "email is required",
-        });
-    }
-
-    if (!password) {
-        logger.error(`${req.method}-${req.originalUrl}: password is required`)
-
-        return res.status(400).json({
-            error: "password is required",
-        });
-    }
 
     try {
         const user = await loginUser({ email, password });
