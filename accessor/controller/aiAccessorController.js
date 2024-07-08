@@ -1,20 +1,17 @@
 import express from "express";
+import { mostInterestingNews } from "../service/aiService.js";
 
 const aiController = express.Router();
 
 aiController.get('/most-interesting', async (req, res) => {
-    try{
+    try {
+        const { news } = req.body;
 
-    }catch(err){
+        const response = await mostInterestingNews(news);
 
-    }
-})
-
-aiController.get('/summarize', async (req, res) => {
-    try{
-
-    }catch(err){
-
+        res.status(200).json({ data: response })
+    } catch (err) {
+        res.status(500).json({ error: 'Internal Server Error' });
     }
 })
 

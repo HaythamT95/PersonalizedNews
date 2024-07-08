@@ -1,4 +1,4 @@
-class News {
+export default class News {
     constructor(title, content) {
         this._title = title;
         this._content = content;

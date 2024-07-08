@@ -7,6 +7,7 @@ import bodyParser from 'body-parser';
 import authController from "./controller/authAccessorController.js"
 import newsController from "./controller/newsAccessorContorller.js"
 import userController from "./controller/userAccessorController.js"
+import aiController from "./controller/aiAccessorController.js"
 
 dotenv.config()
 
@@ -24,6 +25,7 @@ accessorApp.use(bodyParser.json({ type: 'application/*+json' }));
 accessorApp.use('/auth', authController)
 accessorApp.use('/news', newsController)
 accessorApp.use('/user', userController)
+accessorApp.use('/ai', aiController)
 
 
 accessorApp.listen(process.env.PORT_ACCESSOR, async () => {
