@@ -10,7 +10,6 @@ const newsController = express.Router();
 newsController.get('/api/news', async (req, res) => {
     const { preferences } = req.body;
     const earliestPublishedDate = getCurrentDateMinusTwoDays();
-
     let news = [];
 
     try {
@@ -31,7 +30,7 @@ newsController.get('/api/news', async (req, res) => {
 
         res.status(200).json({ news: news })
     } catch (error) {
-        logger.error(`${req.method}-${req.originalUrl}: ${err.message}`)
+        logger.error(`${req.method}-${req.originalUrl}: ${error.message}`)
         res.status(500).json({ error: 'Internal Server Error' });
     }
 })
