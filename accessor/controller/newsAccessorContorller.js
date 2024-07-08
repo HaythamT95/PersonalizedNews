@@ -1,5 +1,6 @@
 import express from "express";
 import dotenv from "dotenv"
+import logger from "../service/logger.js";
 import News from "../model/news.js";
 import { getCurrentDateMinusTwoDays, fetchNews } from "../service/newsService.js";
 
@@ -26,9 +27,11 @@ newsController.get('/api/news', async (req, res) => {
                 news.push(new News(_news.title, _news.summary));
             }
         }
+        logger.info(`${req.method}-${req.originalUrl}`)
 
         res.status(200).json({ news: news })
     } catch (error) {
+        logger.error(`${req.method}-${req.originalUrl}: ${err.message}`)
         res.status(500).json({ error: 'Internal Server Error' });
     }
 })
