@@ -39,7 +39,7 @@ authController.post('/register', async (req, res) => {
     }
 
     try {
-        const user = await axios.post('http://localhost:8080/auth/register', req.body);
+        const user = await axios.post('http://accessor:8080/auth/register', req.body);
 
         logger.info(`${req.method}-${req.originalUrl}`)
 
@@ -71,7 +71,7 @@ authController.post('/login', async (req, res) => {
     }
 
     try {
-        const user = await axios.post('http://localhost:8080/auth/login', req.body);
+        const user = await axios.post('http://accessor:8080/auth/login', req.body);
 
         logger.info(`${req.method}-${req.originalUrl}`)
 

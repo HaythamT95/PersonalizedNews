@@ -8,9 +8,9 @@ mailController.post('/send-mail/:id', async (req, res) => {
     try {
         const userID = req.params.id;
 
-        const news = await axios.get(`http://localhost:5555/ai-news/news/${userID}`);
+        const news = await axios.get(`http://accessor:5555/ai-news/news/${userID}`);
 
-        await axios.post(`http://localhost:8080/mail/send-mail/${userID}`, { data: { news: news.data } })
+        await axios.post(`http://accessor:8080/mail/send-mail/${userID}`, { data: { news: news.data } })
 
         logger.info(`${req.method}-${req.originalUrl}`)
 

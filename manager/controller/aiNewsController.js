@@ -8,9 +8,9 @@ aiNewsController.get('/news/:id', async (req, res) => {
     try {
         const userID = req.params.id;
 
-        const user = await axios.get(`http://localhost:5555/user/preferences/${userID}`);
-        const news = await axios.get(`http://localhost:8080/news/api/news`, { data: { preferences: user.data.user.preferences } })
-        const summarizedNews = await axios.get(`http://localhost:8080/ai/most-interesting`, { data: { news: news.data.news } })
+        const user = await axios.get(`http://accessor:5555/user/preferences/${userID}`);
+        const news = await axios.get(`http://accessor:8080/news/api/news`, { data: { preferences: user.data.user.preferences } })
+        const summarizedNews = await axios.get(`http://accessor:8080/ai/most-interesting`, { data: { news: news.data.news } })
 
         logger.info(`${req.method}-${req.originalUrl}`)
 
