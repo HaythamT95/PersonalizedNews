@@ -1,5 +1,5 @@
 import express from "express";
-import logger from "../service/logger.js";
+import logger from "../utils/logger.js";
 import { userData, addPreferences, updatePreferences, deletePreference } from "../service/userService.js";
 
 const userController = express.Router();
@@ -26,9 +26,10 @@ userController.post('/add-preferences/:id', async (req, res) => {
     try {
         const userID = req.params.id;
         const preferences = req.body;
-
+        console.log(preferences)
         const user = await addPreferences(userID, preferences);
         logger.info(`${req.method}-${req.originalUrl}`)
+        console.log(user)
 
         res.status(200).json({ user });
 

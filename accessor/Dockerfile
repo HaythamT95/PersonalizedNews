@@ -12,6 +12,12 @@ RUN echo "Accessor Service Running"
 # Install app dependencies
 RUN npm install
 
+# Create logs directory and set permissions
+RUN mkdir -p /usr/src/app/logs && chmod 777 /usr/src/app/logs
+
+# Create an empty log file
+RUN touch /usr/src/app/logs/accessor.log && chmod 666 /usr/src/app/logs/accessor.log
+
 # Bundle app source
 COPY . .
 

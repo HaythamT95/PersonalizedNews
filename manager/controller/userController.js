@@ -1,14 +1,25 @@
 import express from "express";
-import logger from "../logger.js";
+import logger from "../utils/logger.js";
 import axios from "axios"
+import { DaprClient, HttpMethod } from "@dapr/dapr";
 
 const userController = express.Router();
 
+const daprHost = "http://localhost";
+const daprPort = "3500";
+const client = new DaprClient({ daprHost: daprHost, daprPort: daprPort });
+const serviceAppId = "accessor";
+
+
 userController.get('/preferences/:id', async (req, res) => {
     try {
-        const user = await axios.get(`http://accessor:8080/user/preferences/${req.params.id}`);
+        const serviceMethod = `/user/preferences/${req.params.id}`;
+
+        const user = await client.invoker.invoke(serviceAppId, serviceMethod, HttpMethod.GET);
+
         logger.info(`${req.method}-${req.originalUrl}`)
-        res.status(200).send(user.data);
+
+        res.status(200).send(user);
     } catch (err) {
         logger.error(`${req.method}-${req.originalUrl}: ${err.message}`)
         res.status(500).json({ error: 'Internal Server Error' });
@@ -16,15 +27,24 @@ userController.get('/preferences/:id', async (req, res) => {
 })
 
 //create/replace preferences
+/**
+ * input of this type:
+ * {
+    "newsCategories": ["Football"],
+    "techUpdates": ["Samsung"]
+    }
+*/
 userController.post('/add-preferences/:id', async (req, res) => {
     try {
         const userID = req.params.id;
         const preferences = req.body;
+        const serviceMethod = `/user/add-preferences/${userID}`;
 
-        const user = await axios.post(`http://accessor:8080/user/add-preferences/${userID}`, preferences);
+        const user = await client.invoker.invoke(serviceAppId, serviceMethod, HttpMethod.POST, preferences);
+
         logger.info(`${req.method}-${req.originalUrl}`)
 
-        res.status(200).send(user.data);
+        res.status(200).send(user);
 
     } catch (err) {
         logger.error(`${req.method}-${req.originalUrl}: ${err.message}`)
@@ -33,15 +53,24 @@ userController.post('/add-preferences/:id', async (req, res) => {
 });
 
 //Add preferences
+/**
+ * input of this type:
+ * {
+    "newsCategories": ["Football"],
+    "techUpdates": ["Samsung"]
+    }
+*/
 userController.patch('/update-preferences/:id', async (req, res) => {
     try {
         const userID = req.params.id;
         const preferences = req.body;
+        const serviceMethod = `/user/update-preferences/${userID}`;
 
-        const user = await axios.patch(`http://accessor:8080/user/update-preferences/${userID}`, preferences);
+        const user = await client.invoker.invoke(serviceAppId, serviceMethod, HttpMethod.PATCH, preferences);
+
         logger.info(`${req.method}-${req.originalUrl}`)
 
-        res.status(200).send(user.data);
+        res.status(200).send(user);
 
     } catch (err) {
         logger.error(`${req.method}-${req.originalUrl}: ${err.message}`)
@@ -50,6 +79,20 @@ userController.patch('/update-preferences/:id', async (req, res) => {
 });
 
 //Remove specific preference from news OR tech
+/**
+ * input of this type:
+ * FOR NEWS DELETE
+ * {
+        "type": "news",
+        "preference": ["sports"]
+    }
+
+    FOR TECH DELETE
+    {
+    "type": "tech",
+    "preference": ["AI"]
+    }
+*/
 userController.delete('/delete-preferences/:id', async (req, res) => {
     try {
         const userID = req.params.id;
@@ -58,11 +101,13 @@ userController.delete('/delete-preferences/:id', async (req, res) => {
             type: type,
             preferences: preferences
         };
+        const serviceMethod = `/user/delete-preferences/${userID}`;
 
-        const user = await axios.delete(`http://accessor:8080/user/delete-preferences/${userID}`, { data: typeAndPreference });
+        const user = await client.invoker.invoke(serviceAppId, serviceMethod, HttpMethod.DELETE, typeAndPreference);
+
         logger.info(`${req.method}-${req.originalUrl}`)
 
-        res.status(200).send(user.data);
+        res.status(200).send(user);
 
     } catch (err) {
         logger.error(`${req.method}-${req.originalUrl}: ${err.message}`)

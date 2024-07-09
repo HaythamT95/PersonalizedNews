@@ -1,5 +1,5 @@
 import express from "express";
-import logger from "../service/logger.js";
+import logger from "../utils/logger.js";
 import { createUser, loginUser } from "../service/userService.js";
 
 const authController = express.Router();

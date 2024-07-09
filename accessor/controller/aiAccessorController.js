@@ -1,10 +1,10 @@
 import express from "express";
-import logger from "../service/logger.js";
+import logger from "../utils/logger.js";
 import { mostInterestingNews } from "../service/aiService.js";
 
 const aiController = express.Router();
 
-aiController.get('/most-interesting', async (req, res) => {
+aiController.post('/most-interesting', async (req, res) => {
     try {
         const { news } = req.body;
 

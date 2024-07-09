@@ -1,8 +1,14 @@
 import express from "express";
 import axios from "axios"
-import logger from "../logger.js";
+import logger from "../utils/logger.js";
+import { DaprClient, HttpMethod } from "@dapr/dapr";
 
 const authController = express.Router();
+
+const daprHost = "http://localhost";
+const daprPort = "3500";
+const client = new DaprClient({ daprHost: daprHost, daprPort: daprPort });
+const serviceAppId = "accessor";
 
 authController.post('/register', async (req, res) => {
     const { firstName, lastName, email, password } = req.body;
@@ -39,11 +45,14 @@ authController.post('/register', async (req, res) => {
     }
 
     try {
-        const user = await axios.post('http://accessor:8080/auth/register', req.body);
+
+        const serviceMethod = "/auth/register";
+
+        const user = await client.invoker.invoke(serviceAppId, serviceMethod, HttpMethod.POST, req.body);
 
         logger.info(`${req.method}-${req.originalUrl}`)
 
-        res.status(201).send(user.data);
+        res.status(201).send(user);
 
     } catch (err) {
         logger.error(`${req.method}-${req.originalUrl}: ${err.message}`)
@@ -71,11 +80,13 @@ authController.post('/login', async (req, res) => {
     }
 
     try {
-        const user = await axios.post('http://accessor:8080/auth/login', req.body);
+        const serviceMethod = "/auth/login";
+
+        const user = await client.invoker.invoke(serviceAppId, serviceMethod, HttpMethod.POST, req.body);
 
         logger.info(`${req.method}-${req.originalUrl}`)
 
-        res.status(200).send(user.data);
+        res.status(200).send(user);
     } catch (err) {
         logger.error(`${req.method}-${req.originalUrl}: ${err.message}`)
         res.status(500).json({ error: 'Internal Server Error' });

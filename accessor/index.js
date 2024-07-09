@@ -4,7 +4,7 @@ import dotenv from "dotenv"
 import morgan from "morgan"
 import mongoose from "mongoose"
 import bodyParser from 'body-parser';
-import logger from "./service/logger.js"
+import logger from "./utils/logger.js"
 import authController from "./controller/authAccessorController.js"
 import newsController from "./controller/newsAccessorContorller.js"
 import userController from "./controller/userAccessorController.js"
