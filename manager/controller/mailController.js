@@ -8,26 +8,21 @@ const mailController = express.Router();
 const daprHost = "http://localhost";
 const daprPort = "3500";
 const client = new DaprClient({ daprHost: daprHost, daprPort: daprPort });
-const serviceAppIdAccessor = "accessor";
 const serviceAppIdManager = "manager";
 
 mailController.post('/send-mail/:id', async (req, res) => {
     try {
         const userID = req.params.id;
-
+        const { email } = req.body;
         const serviceMethodNews = `/ai-news/news/${userID}`;
 
-        //const news = await axios.get(`http://accessor:5555/ai-news/news/${userID}`);
-
         const news = await client.invoker.invoke(serviceAppIdManager, serviceMethodNews, HttpMethod.GET);
-        //console.log(news)
-        //await axios.post(`http://accessor:8080/mail/send-mail/${userID}`, { data: { news: news.data } })
 
         const pubSubName = "sendmailpubsub";
         const pubSubTopic = "send-mail";
-        
+
         const message = {
-            userID: userID,
+            email: email,
             data: news.data
         }
 

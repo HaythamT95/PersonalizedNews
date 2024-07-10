@@ -1,17 +1,24 @@
 import express from "express";
 import logger from "../utils/logger.js";
+import sendMailLatestNews from "../service/mailService.js";
 
 const mailController = express.Router();
 
 mailController.post('/send-mail', async (req, res) => {
-    const {userID , data} = req.body.data;
+    try{
+        const { email, data } = req.body.data;
 
-    logger.info(`${req.method}-${req.originalUrl}: Sending email`)
+        logger.info(`${req.method}-${req.originalUrl}: Sending email`)
 
-    console.log(userID)
-    console.log(data)
-
-    res.send("Mail sent")
+        await sendMailLatestNews(email, data)
+    
+        logger.info(`${req.method}-${req.originalUrl}: Email sent`)
+    
+        res.status(200).send("Mail sent")
+    }catch(err){
+        logger.error(`${req.method}-${req.originalUrl}: ${err.message}`)
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
 })
 
 export default mailController;
