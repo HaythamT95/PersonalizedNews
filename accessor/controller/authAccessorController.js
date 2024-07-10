@@ -5,14 +5,14 @@ import { createUser, loginUser } from "../service/userService.js";
 const authController = express.Router();
 
 authController.post('/register', async (req, res) => {
-    const { firstName, lastName, email, password } = req.body;
+    const { firstName, lastName, email, password } = req.body.data;
 
     try {
-        const user = await createUser({ firstName, lastName, email, password });
+        await createUser({ firstName, lastName, email, password });
 
         logger.info(`${req.method}-${req.originalUrl}`)
 
-        res.status(201).json({ user });
+        res.sendStatus(201);
     } catch (err) {
         if (err.message === 'Email is taken') {
             logger.error(`${req.method}-${req.originalUrl}: ${err.message}`)

@@ -1,7 +1,7 @@
 import { hashPassword, comparePassword } from "./authService.js";
 import User from "../model/user.js";
 
-const createUser = async ({ firstName, lastName, email, password }) => {
+async function createUser ({ firstName, lastName, email, password }){
     const exist = await User.findOne({ email: email });
 
     if (exist) {
@@ -16,8 +16,6 @@ const createUser = async ({ firstName, lastName, email, password }) => {
         email: email,
         password: hashedPassword
     }).save()
-
-    return user;
 }
 
 const loginUser = async ({ email, password }) => {
@@ -63,7 +61,6 @@ const addPreferences = async (userID, preferences) => {
     }
 
     await user.save();
-    return user;
 };
 
 const updatePreferences = async (userID, preferences) => {

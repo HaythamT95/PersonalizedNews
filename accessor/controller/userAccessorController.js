@@ -22,17 +22,15 @@ userController.get('/preferences/:id', async (req, res) => {
 })
 
 //create/replace preferences
-userController.post('/add-preferences/:id', async (req, res) => {
+userController.post('/add-preferences', async (req, res) => {
     try {
-        const userID = req.params.id;
-        const preferences = req.body;
-        console.log(preferences)
-        const user = await addPreferences(userID, preferences);
+        const { userID, preferences } = req.body.data;
+
+        await addPreferences(userID, preferences);
+        
         logger.info(`${req.method}-${req.originalUrl}`)
-        console.log(user)
 
-        res.status(200).json({ user });
-
+        res.sendStatus(201);
     } catch (err) {
         if (err.message === 'User not found') {
             logger.error(`${req.method}-${req.originalUrl}: ${err.message}`)
@@ -66,13 +64,11 @@ userController.patch('/update-preferences/:id', async (req, res) => {
     }
 });
 
-
 //Remove specific preference from news OR tech
 userController.delete('/delete-preferences/:id', async (req, res) => {
     try {
         const userID = req.params.id;
         const { type, preferences } = req.body;
-        console.log(type, " ", preferences)
 
         const user = await deletePreference(userID, type, preferences);
         logger.info(`${req.method}-${req.originalUrl}`)

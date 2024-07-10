@@ -9,6 +9,7 @@ import authController from "./controller/authAccessorController.js"
 import newsController from "./controller/newsAccessorContorller.js"
 import userController from "./controller/userAccessorController.js"
 import aiController from "./controller/aiAccessorController.js"
+import mailController from "./controller/mailAccessorController.js"
 
 dotenv.config()
 
@@ -17,10 +18,8 @@ const accessorApp = express()
 
 mongoose.connect(process.env.DATABASEURL).then(() => {
     logger.info(`DB connected`)
-    console.log("DB connected")
 }).catch((err) => {
     logger.error(`DB Failed to Connect ${err}`)
-    console.log("DB Failed to Connect", err)
 })
 
 accessorApp.use(express.json())
@@ -33,9 +32,28 @@ accessorApp.use('/auth', authController)
 accessorApp.use('/news', newsController)
 accessorApp.use('/user', userController)
 accessorApp.use('/ai', aiController)
+accessorApp.use('/mail', mailController)
 
+accessorApp.get('/dapr/subscribe', (_req, res) => {
+    res.json([
+        {
+            pubsubname: "adduserpubsub",
+            topic: "addUser",
+            route: "auth/register"
+        },
+        {
+            pubsubname: "addpreferencepubsub",
+            topic: "add-preferences",
+            route: `user/add-preferences`
+        },
+        {
+            pubsubname: "sendmailpubsub",
+            topic: "send-mail",
+            route: `mail/send-mail`
+        }
+    ]);
+});
 
 accessorApp.listen(process.env.PORT_ACCESSOR, async () => {
     logger.info(`server running on port ${process.env.PORT_ACCESSOR}`)
-    console.log(`server running on port ${process.env.PORT_ACCESSOR}`);
 });

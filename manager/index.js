@@ -23,7 +23,6 @@ managerApp.use('/user', userController)
 managerApp.use('/ai-news', aiNewsController)
 managerApp.use('/mail', mailController)
 
-
 managerApp.listen(process.env.PORT_MANAGER, () => {
     logger.info(`server running on port ${process.env.PORT_MANAGER}`)
 })

@@ -46,14 +46,14 @@ authController.post('/register', async (req, res) => {
 
     try {
 
-        const serviceMethod = "/auth/register";
-
-        const user = await client.invoker.invoke(serviceAppId, serviceMethod, HttpMethod.POST, req.body);
+        const pubSubName = "adduserpubsub";
+        const pubSubTopic = "addUser";
+        
+        await axios.post(`${daprHost}:${daprPort}/v1.0/publish/${pubSubName}/${pubSubTopic}`, req.body);
 
         logger.info(`${req.method}-${req.originalUrl}`)
 
-        res.status(201).send(user);
-
+        res.status(200).send("Request to register has been sent :)")
     } catch (err) {
         logger.error(`${req.method}-${req.originalUrl}: ${err.message}`)
         return res.status(500).json({ error: err })
