@@ -29,26 +29,25 @@ services:
     networks:
       - network-dapr
 
-  manager:
+  pn.manager.auth:
     build:
-      context: manager
-      dockerfile: Dockerfile
-    container_name: manager
+        context: .
+        dockerfile: manager/pn.manager.auth/Dockerfile
+    container_name: pn.manager.auth
     ports:
-      - "5555:5555"
+        - "5556:5556"
     environment:
-      - PORT_GATEWAY=5555
-      - PORT_ACCESSOR=8080
-      - RABBITMQ_URL=amqp://guest:guest@rabbitmq:5672
+        - PORT_AUTH_MANAGER=5556
+        - RABBITMQ_URL=amqp://guest:guest@rabbitmq:5672
     depends_on:
       rabbitmq:
           condition: service_healthy
     networks:
-      - network-dapr
+        - network-dapr
     volumes:
       - ./manager/logs:/usr/src/app/logs
   
-  manager-dapr:
+  pn.manager.auth.dapr:
     image: "daprio/daprd:edge"
     deploy:
       restart_policy:
@@ -57,8 +56,8 @@ services:
         max_attempts: 10
         window: 120s
     command: ["./daprd",
-        "--app-port", "5555",
-        "--app-id", "manager",
+        "--app-port", "5556",
+        "--app-id", "pnmanagerauth",
         "--app-protocol", "http",
         "--dapr-http-port", "3500",
         "--resources-path", "./dapr/components",
@@ -67,19 +66,139 @@ services:
     volumes:
       - "./dapr/:/dapr"
     depends_on:
-      - manager
-    network_mode: "service:manager"
+      - pn.manager.auth
+    network_mode: "service:pn.manager.auth"
 
-  accessor:
+  pn.manager.preferences:
     build:
-      context: accessor
-      dockerfile: Dockerfile
-    container_name: accessor
+        context: .
+        dockerfile: manager/pn.manager.preferences/Dockerfile
+    container_name: pn.manager.preferences
     ports:
-      - "8080:8080"
+        - "5557:5557"
+    environment:
+        - PORT_PREFERENCES_MANAGER=5557
+        - RABBITMQ_URL=amqp://guest:guest@rabbitmq:5672
+    depends_on:
+      rabbitmq:
+          condition: service_healthy
+    networks:
+        - network-dapr
+    volumes:
+      - ./manager/logs:/usr/src/app/logs
+  
+  pn.manager.preferences.dapr:
+    image: "daprio/daprd:edge"
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 10
+        window: 120s
+    command: ["./daprd",
+        "--app-port", "5557",
+        "--app-id", "pnmanagerpreferences",
+        "--app-protocol", "http",
+        "--dapr-http-port", "3500",
+        "--resources-path", "./dapr/components",
+        "--config", "./dapr/config.yaml"
+        ]
+    volumes:
+      - "./dapr/:/dapr"
+    depends_on:
+      - pn.manager.preferences
+    network_mode: "service:pn.manager.preferences"
+
+  pn.manager.ai.news:
+    build:
+        context: .
+        dockerfile: manager/pn.manager.ai.news/Dockerfile
+    container_name: pn.manager.ai.news
+    ports:
+        - "5558:5558"
+    environment:
+        - PORT_AINEWS_MANAGER=5558
+        - RABBITMQ_URL=amqp://guest:guest@rabbitmq:5672
+    depends_on:
+      rabbitmq:
+          condition: service_healthy
+    networks:
+        - network-dapr
+    volumes:
+      - ./manager/logs:/usr/src/app/logs
+  
+  pn.manager.ai.news.dapr:
+    image: "daprio/daprd:edge"
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 10
+        window: 120s
+    command: ["./daprd",
+        "--app-port", "5558",
+        "--app-id", "pnmanagerainews",
+        "--app-protocol", "http",
+        "--dapr-http-port", "3500",
+        "--resources-path", "./dapr/components",
+        "--config", "./dapr/config.yaml"
+        ]
+    volumes:
+      - "./dapr/:/dapr"
+    depends_on:
+      - pn.manager.ai.news
+    network_mode: "service:pn.manager.ai.news"
+
+  pn.manager.mail:
+    build:
+        context: .
+        dockerfile: manager/pn.manager.mail/Dockerfile
+    container_name: pn.manager.mail
+    ports:
+        - "5559:5559"
+    environment:
+        - PORT_MAIL_MANAGER=5559
+        - RABBITMQ_URL=amqp://guest:guest@rabbitmq:5672
+    depends_on:
+      rabbitmq:
+          condition: service_healthy
+    networks:
+        - network-dapr
+    volumes:
+      - ./manager/logs:/usr/src/app/logs
+  
+  pn.manager.mail.dapr:
+    image: "daprio/daprd:edge"
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 10
+        window: 120s
+    command: ["./daprd",
+        "--app-port", "5559",
+        "--app-id", "pnmanagermail",
+        "--app-protocol", "http",
+        "--dapr-http-port", "3500",
+        "--resources-path", "./dapr/components",
+        "--config", "./dapr/config.yaml"
+        ]
+    volumes:
+      - "./dapr/:/dapr"
+    depends_on:
+      - pn.manager.mail
+    network_mode: "service:pn.manager.mail"
+
+  pn.accessor.auth:
+    build:
+      context: .
+      dockerfile: accessor/pn.accessor.auth/Dockerfile
+    container_name: pn.accessor.auth
+    ports:
+      - "5560:5560"
     environment:
       - DATABASEURL=${DATABASEURL}
-      - PORT_ACCESSOR=8080
+      - PORT_AUTH_ACCESSOR=5560
       - RABBITMQ_URL=amqp://guest:guest@rabbitmq:5672
     depends_on:
         rabbitmq:
@@ -89,7 +208,7 @@ services:
     volumes:
       - ./accessor/logs:/usr/src/app/logs
     
-  accessor-dapr:
+  pn.accessor.auth.dapr:
     image: "daprio/daprd:edge"
     deploy:
       restart_policy:
@@ -98,8 +217,8 @@ services:
         max_attempts: 10
         window: 120s
     command: ["./daprd",
-        "--app-port", "8080",
-        "--app-id", "accessor",
+        "--app-port", "5560",
+        "--app-id", "pnaccessorauth",
         "--app-protocol", "http",
         "--dapr-http-port", "3500",
         "--resources-path", "./dapr/components",
@@ -108,8 +227,167 @@ services:
     volumes:
       - "./dapr/:/dapr"
     depends_on:
-      - accessor
-    network_mode: "service:accessor"
+      - pn.accessor.auth
+    network_mode: "service:pn.accessor.auth"
+
+  pn.accessor.preferences:
+    build:
+      context: .
+      dockerfile: accessor/pn.accessor.preferences/Dockerfile
+    container_name: pn.accessor.preferences
+    ports:
+      - "5561:5561"
+    environment:
+      - DATABASEURL=${DATABASEURL}
+      - PORT_PREFERENCES_ACCESSOR=5561
+      - RABBITMQ_URL=amqp://guest:guest@rabbitmq:5672
+    depends_on:
+        rabbitmq:
+          condition: service_healthy
+    networks:
+      - network-dapr
+    volumes:
+      - ./accessor/logs:/usr/src/app/logs
+    
+  pn.accessor.preferences.dapr:
+    image: "daprio/daprd:edge"
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 10
+        window: 120s
+    command: ["./daprd",
+        "--app-port", "5561",
+        "--app-id", "pnaccessorpreferences",
+        "--app-protocol", "http",
+        "--dapr-http-port", "3500",
+        "--resources-path", "./dapr/components",
+        "--config", "./dapr/config.yaml"
+        ]
+    volumes:
+      - "./dapr/:/dapr"
+    depends_on:
+      - pn.accessor.preferences
+    network_mode: "service:pn.accessor.preferences"
+
+  pn.accessor.ai:
+    build:
+      context: .
+      dockerfile: accessor/pn.accessor.ai/Dockerfile
+    container_name: pn.accessor.ai
+    ports:
+      - "5562:5562"
+    environment:
+      - PORT_AI_ACCESSOR=5562
+      - RABBITMQ_URL=amqp://guest:guest@rabbitmq:5672
+    depends_on:
+        rabbitmq:
+          condition: service_healthy
+    networks:
+      - network-dapr
+    volumes:
+      - ./accessor/logs:/usr/src/app/logs
+    
+  pn.accessor.ai.dapr:
+    image: "daprio/daprd:edge"
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 10
+        window: 120s
+    command: ["./daprd",
+        "--app-port", "5562",
+        "--app-id", "pnaccessorai",
+        "--app-protocol", "http",
+        "--dapr-http-port", "3500",
+        "--resources-path", "./dapr/components",
+        "--config", "./dapr/config.yaml"
+        ]
+    volumes:
+      - "./dapr/:/dapr"
+    depends_on:
+      - pn.accessor.ai
+    network_mode: "service:pn.accessor.ai"
+
+  pn.accessor.news:
+    build:
+      context: .
+      dockerfile: accessor/pn.accessor.news/Dockerfile
+    container_name: pn.accessor.news
+    ports:
+      - "5563:5563"
+    environment:
+      - PORT_NEWS_ACCESSOR=5563
+    depends_on:
+        rabbitmq:
+          condition: service_healthy
+    networks:
+      - network-dapr
+    volumes:
+      - ./accessor/logs:/usr/src/app/logs
+    
+  pn.accessor.news.dapr:
+    image: "daprio/daprd:edge"
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 10
+        window: 120s
+    command: ["./daprd",
+        "--app-port", "5563",
+        "--app-id", "pnaccessornews",
+        "--app-protocol", "http",
+        "--dapr-http-port", "3500",
+        "--resources-path", "./dapr/components",
+        "--config", "./dapr/config.yaml"
+        ]
+    volumes:
+      - "./dapr/:/dapr"
+    depends_on:
+      - pn.accessor.news
+    network_mode: "service:pn.accessor.news"
+
+  pn.accessor.mail:
+    build:
+      context: .
+      dockerfile: accessor/pn.accessor.mail/Dockerfile
+    container_name: pn.accessor.mail
+    ports:
+      - "5564:5564"
+    environment:
+      - PORT_MAIL_ACCESSOR=5564
+    depends_on:
+        rabbitmq:
+          condition: service_healthy
+    networks:
+      - network-dapr
+    volumes:
+      - ./accessor/logs:/usr/src/app/logs
+    
+  pn.accessor.mail.dapr:
+    image: "daprio/daprd:edge"
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 10
+        window: 120s
+    command: ["./daprd",
+        "--app-port", "5564",
+        "--app-id", "pnaccessormail",
+        "--app-protocol", "http",
+        "--dapr-http-port", "3500",
+        "--resources-path", "./dapr/components",
+        "--config", "./dapr/config.yaml"
+        ]
+    volumes:
+      - "./dapr/:/dapr"
+    depends_on:
+      - pn.accessor.mail
+    network_mode: "service:pn.accessor.mail"
 
 volumes:
   mongo-data:

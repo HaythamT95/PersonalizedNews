@@ -3,7 +3,10 @@ kind: Resiliency
 metadata:
   name: myresiliency
 scopes:
-  - manager
+  - pnmanagerauth
+  - pnmanagerainews
+  - pnmanagerpreferences
+  - pnmanagermail
 
 spec:
   policies:
