@@ -14,6 +14,27 @@ mailController.post('/send-mail/:id', async (req, res) => {
     try {
         const userID = req.params.id;
         const { email } = req.body;
+
+        const pubSubName = "asyncmailpubsub";
+        const pubSubTopic = "async-mail";
+
+        const message = {
+            userID: userID,
+            email: email
+        }
+
+        await axios.post(`${daprHost}:${daprPort}/v1.0/publish/${pubSubName}/${pubSubTopic}`, message);
+
+        res.status(200).send("Request to send mail has been sent :)")
+    } catch (err) {
+        logger.error(`${req.method}-${req.originalUrl}: ${err.message}`)
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+})
+
+mailController.post('/async-mail', async (req, res) => {
+    try {
+        const { userID, email } = req.body.data;
         const serviceMethodNews = `/ai-news/news/${userID}`;
 
         const news = await client.invoker.invoke(serviceAppIdManager, serviceMethodNews, HttpMethod.GET);
@@ -30,7 +51,8 @@ mailController.post('/send-mail/:id', async (req, res) => {
 
         logger.info(`${req.method}-${req.originalUrl}`)
 
-        res.status(200).send("Request to send mail has been sent :)")
+        res.status(200).send("Request to send mail has been transferred :)")
+
     } catch (err) {
         logger.error(`${req.method}-${req.originalUrl}: ${err.message}`)
         res.status(500).json({ error: 'Internal Server Error' });
