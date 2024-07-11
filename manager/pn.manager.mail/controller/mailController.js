@@ -12,6 +12,8 @@ const serviceAppIdManager = "pnmanagerainews";
 
 mailController.post('/send-mail/:id', async (req, res) => {
     try {
+        logger.info(`${req.method}-${req.originalUrl}`)
+
         const userID = req.params.id;
         const { email } = req.body;
 
@@ -25,6 +27,9 @@ mailController.post('/send-mail/:id', async (req, res) => {
 
         await axios.post(`${daprHost}:${daprPort}/v1.0/publish/${pubSubName}/${pubSubTopic}`, message);
 
+        logger.info(`${req.method}-${req.originalUrl}: Sent to asynchronous request`)
+
+
         res.status(200).send("Request to send mail has been sent :)")
     } catch (err) {
         logger.error(`${req.method}-${req.originalUrl}: ${err.message}`)
@@ -34,10 +39,14 @@ mailController.post('/send-mail/:id', async (req, res) => {
 
 mailController.post('/async-mail', async (req, res) => {
     try {
+        logger.info(`${req.method}-${req.originalUrl}`)
+
         const { userID, email } = req.body.data;
         const serviceMethodNews = `/ai-news/news/${userID}`;
 
         const news = await client.invoker.invoke(serviceAppIdManager, serviceMethodNews, HttpMethod.GET);
+
+        logger.info(`${req.method}-${req.originalUrl}: Retrieved news`)
 
         const pubSubName = "sendmailpubsub";
         const pubSubTopic = "send-mail";
@@ -49,7 +58,7 @@ mailController.post('/async-mail', async (req, res) => {
 
         await axios.post(`${daprHost}:${daprPort}/v1.0/publish/${pubSubName}/${pubSubTopic}`, message);
 
-        logger.info(`${req.method}-${req.originalUrl}`)
+        logger.info(`${req.method}-${req.originalUrl}: Sent to asynchronous request`)
 
         res.status(200).send("Request to send mail has been transferred :)")
 

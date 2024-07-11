@@ -1,6 +1,7 @@
 import express from "express"
 import cors from "cors"
 import dotenv from "dotenv"
+import logger from "./utils/logger.js"
 import preferencesController from "./controller/preferencesController.js"
 
 dotenv.config()
@@ -14,5 +15,5 @@ preferencesApp.use(cors())
 preferencesApp.use('/user', preferencesController)
 
 preferencesApp.listen(process.env.PORT_PREFERENCES_MANAGER, () => {
-    //logger.info(`server running on port ${process.env.PORT_AUTH_MANAGER}`)
+    logger.info(`Service pn.manager.preferences on port ${process.env.PORT_AUTH_MANAGER}`)
 })

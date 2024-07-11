@@ -12,11 +12,13 @@ const serviceAppId = "pnaccessorpreferences";
 
 preferencesController.get('/preferences/:id', async (req, res) => {
     try {
+        logger.info(`${req.method}-${req.originalUrl}`)
+
         const serviceMethod = `/user/preferences/${req.params.id}`;
 
         const user = await client.invoker.invoke(serviceAppId, serviceMethod, HttpMethod.GET);
 
-        logger.info(`${req.method}-${req.originalUrl}`)
+        logger.info(`${req.method}-${req.originalUrl}: Retrieved user`)
 
         res.status(200).send(user);
     } catch (err) {
@@ -35,6 +37,8 @@ preferencesController.get('/preferences/:id', async (req, res) => {
 */
 preferencesController.post('/add-preferences/:id', async (req, res) => {
     try {
+        logger.info(`${req.method}-${req.originalUrl}`)
+
         const pubSubName = "addpreferencepubsub";
         const pubSubTopic = "add-preferences";
 
@@ -45,7 +49,7 @@ preferencesController.post('/add-preferences/:id', async (req, res) => {
 
         await axios.post(`${daprHost}:${daprPort}/v1.0/publish/${pubSubName}/${pubSubTopic}`, message);
 
-        logger.info(`${req.method}-${req.originalUrl}`)
+        logger.info(`${req.method}-${req.originalUrl}: Successfully created preferences`)
 
         res.status(200).send("Request to register has been sent :)")
     } catch (err) {
@@ -64,13 +68,15 @@ preferencesController.post('/add-preferences/:id', async (req, res) => {
 */
 preferencesController.patch('/update-preferences/:id', async (req, res) => {
     try {
+        logger.info(`${req.method}-${req.originalUrl}`)
+
         const userID = req.params.id;
         const preferences = req.body;
         const serviceMethod = `/user/update-preferences/${userID}`;
 
         const user = await client.invoker.invoke(serviceAppId, serviceMethod, HttpMethod.PATCH, preferences);
 
-        logger.info(`${req.method}-${req.originalUrl}`)
+        logger.info(`${req.method}-${req.originalUrl}: Successfully updated preferences`)
 
         res.status(200).send(user);
 
@@ -97,6 +103,8 @@ preferencesController.patch('/update-preferences/:id', async (req, res) => {
 */
 preferencesController.delete('/delete-preferences/:id', async (req, res) => {
     try {
+        logger.info(`${req.method}-${req.originalUrl}`)
+
         const userID = req.params.id;
         const { type, preferences } = req.body;
         const typeAndPreference = {
@@ -107,7 +115,7 @@ preferencesController.delete('/delete-preferences/:id', async (req, res) => {
 
         const user = await client.invoker.invoke(serviceAppId, serviceMethod, HttpMethod.DELETE, typeAndPreference);
 
-        logger.info(`${req.method}-${req.originalUrl}`)
+        logger.info(`${req.method}-${req.originalUrl}: Successfully deleted prefernces`)
 
         res.status(200).send(user);
 

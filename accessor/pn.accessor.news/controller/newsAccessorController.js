@@ -8,6 +8,8 @@ dotenv.config();
 const newsController = express.Router();
 
 newsController.post('/api/news', async (req, res) => {
+    logger.info(`${req.method}-${req.originalUrl}`)
+
     const preferences = req.body;
 
     const earliestPublishedDate = getCurrentDateMinusTwoDays();
@@ -27,7 +29,9 @@ newsController.post('/api/news', async (req, res) => {
                 news.push(new News(_news.title, _news.summary));
             }
         }
-        logger.info(`${req.method}-${req.originalUrl}`)
+
+        logger.info(`${req.method}-${req.originalUrl}: Added fetched news`)
+
 
         res.status(200).json({ news: news })
     } catch (error) {

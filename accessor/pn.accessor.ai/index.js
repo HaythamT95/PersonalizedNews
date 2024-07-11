@@ -14,5 +14,5 @@ authApp.use(cors())
 authApp.use('/ai', aiController)
 
 authApp.listen(process.env.PORT_AI_ACCESSOR, () => {
-    logger.info(`server running on port ${process.env.PORT_AI_ACCESSOR}`)
+    logger.info(`Service pn.accessor.ai running on port ${process.env.PORT_AI_ACCESSOR}`)
 })

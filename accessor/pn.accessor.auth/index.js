@@ -33,5 +33,5 @@ authApp.get('/dapr/subscribe', (_req, res) => {
 });
 
 authApp.listen(process.env.PORT_AUTH_ACCESSOR, () => {
-    logger.info(`server running on port ${process.env.PORT_AUTH_ACCESSOR}`)
+    logger.info(`Service pn.accessor.auth running on port ${process.env.PORT_AUTH_ACCESSOR}`)
 })

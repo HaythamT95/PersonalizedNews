@@ -1,7 +1,7 @@
 import express from "express"
 import cors from "cors"
 import dotenv from "dotenv"
-import newsController from "./controller/newsAccessorContorller.js"
+import newsController from "./controller/newsAccessorController.js"
 import logger from "./utils/logger.js"
 dotenv.config()
 
@@ -14,5 +14,5 @@ authApp.use(cors())
 authApp.use('/news', newsController)
 
 authApp.listen(process.env.PORT_NEWS_ACCESSOR, () => {
-    logger.info(`server running on port ${process.env.PORT_NEWS_ACCESSOR}`)
+    logger.info(`Service pn.accessor.news running on port ${process.env.PORT_NEWS_ACCESSOR}`)
 })

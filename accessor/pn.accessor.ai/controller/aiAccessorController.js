@@ -6,11 +6,13 @@ const aiController = express.Router();
 
 aiController.post('/most-interesting', async (req, res) => {
     try {
+        logger.info(`${req.method}-${req.originalUrl}`)
+
         const { news } = req.body;
 
         const response = await mostInterestingNews(news);
         
-        logger.info(`${req.method}-${req.originalUrl}`)
+        logger.info(`${req.method}-${req.originalUrl} Returning most interesting news after AI fetch`)
 
         res.status(200).json({ data: response })
     } catch (err) {

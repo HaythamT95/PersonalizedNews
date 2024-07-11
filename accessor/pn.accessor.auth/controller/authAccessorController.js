@@ -6,11 +6,13 @@ const authController = express.Router();
 
 authController.post('/register', async (req, res) => {
     try {
+        logger.info(`${req.method}-${req.originalUrl}`)
+
         const { firstName, lastName, email, password } = req.body.data;
 
         await createUser({ firstName, lastName, email, password });
 
-        logger.info(`${req.method}-${req.originalUrl}`)
+        logger.info(`${req.method}-${req.originalUrl} User created successfully`)
 
         res.sendStatus(201);
     } catch (err) {
@@ -26,12 +28,14 @@ authController.post('/register', async (req, res) => {
 })
 
 authController.post('/login', async (req, res) => {
-    const { email, password } = req.body;
-
     try {
+        logger.info(`${req.method}-${req.originalUrl}`)
+
+        const { email, password } = req.body;
+
         const user = await loginUser({ email, password });
 
-        logger.info(`${req.method}-${req.originalUrl}`)
+        logger.info(`${req.method}-${req.originalUrl} User retrieved successfully`)
 
         res.status(200).json({ user });
     } catch (err) {

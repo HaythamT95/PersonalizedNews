@@ -13,6 +13,8 @@ const serviceAiAppId = "pnaccessorai";
 
 aiNewsController.get('/news/:id', async (req, res) => {
     try {
+        logger.info(`${req.method}-${req.originalUrl}`)
+
         const userID = req.params.id;
         const serviceMethodUserPreferences = `/user/preferences/${userID}`;
         const serviceMethodNews = `/news/api/news`;
@@ -20,11 +22,15 @@ aiNewsController.get('/news/:id', async (req, res) => {
 
         const user = await client.invoker.invoke(servicePreferencesAppId, serviceMethodUserPreferences, HttpMethod.GET);
 
+        logger.info(`${req.method}-${req.originalUrl}: Retrieved user preferences`)
+
         const news = await client.invoker.invoke(serviceNewsAppId, serviceMethodNews, HttpMethod.POST, user.user.preferences);
+
+        logger.info(`${req.method}-${req.originalUrl}: Retrieved news`)
 
         const summarizedNews = await client.invoker.invoke(serviceAiAppId, serviceMethodSummarizedNews, HttpMethod.POST, news);
 
-        logger.info(`${req.method}-${req.originalUrl}`)
+        logger.info(`${req.method}-${req.originalUrl}: Retrieved summarized news`)
 
         res.status(200).send(summarizedNews)
     } catch (err) {

@@ -33,5 +33,5 @@ preferencesApp.get('/dapr/subscribe', (_req, res) => {
 });
 
 preferencesApp.listen(process.env.PORT_PREFERENCES_ACCESSOR, () => {
-    logger.info(`server running on port ${process.env.PORT_PREFERENCES_ACCESSOR}`)
+    logger.info(`Service pn.accessor.preferences on port ${process.env.PORT_PREFERENCES_ACCESSOR}`)
 })

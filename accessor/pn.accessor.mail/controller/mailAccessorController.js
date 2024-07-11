@@ -6,9 +6,9 @@ const mailController = express.Router();
 
 mailController.post('/send-mail', async (req, res) => {
     try{
-        const { email, data } = req.body.data;
-
         logger.info(`${req.method}-${req.originalUrl}: Sending email`)
+
+        const { email, data } = req.body.data;
 
         await sendMailLatestNews(email, data)
     

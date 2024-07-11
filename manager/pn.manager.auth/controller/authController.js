@@ -10,6 +10,8 @@ const daprPort = "3500";
 const client = new DaprClient({ daprHost: daprHost, daprPort: daprPort });
 
 authController.post('/register', async (req, res) => {
+    logger.info(`${req.method}-${req.originalUrl}`)
+
     const { firstName, lastName, email, password } = req.body;
 
     if (!firstName) {
@@ -50,7 +52,7 @@ authController.post('/register', async (req, res) => {
         
         await axios.post(`${daprHost}:${daprPort}/v1.0/publish/${pubSubName}/${pubSubTopic}`, req.body);
 
-        logger.info(`${req.method}-${req.originalUrl}`)
+        logger.info(`${req.method}-${req.originalUrl}: Sent to add user service`)
 
         res.status(200).send("Request to register has been sent :)")
     } catch (err) {
@@ -60,6 +62,8 @@ authController.post('/register', async (req, res) => {
 })
 
 authController.post('/login', async (req, res) => {
+    logger.info(`${req.method}-${req.originalUrl}`)
+
     const { email, password } = req.body;
 
     if (!email) {
@@ -84,7 +88,7 @@ authController.post('/login', async (req, res) => {
 
         const user = await client.invoker.invoke(serviceAppId, serviceMethod, HttpMethod.POST, req.body);
 
-        logger.info(`${req.method}-${req.originalUrl}`)
+        logger.info(`${req.method}-${req.originalUrl}: Retrieved user`)
 
         res.status(200).send(user);
     } catch (err) {

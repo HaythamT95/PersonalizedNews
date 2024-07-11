@@ -2,6 +2,7 @@ import express from "express"
 import cors from "cors"
 import dotenv from "dotenv"
 import bodyParser from "body-parser"
+import logger from "./utils/logger.js"
 import mailController from "./controller/mailController.js"
 
 dotenv.config()
@@ -26,5 +27,5 @@ mailApp.get('/dapr/subscribe', (_req, res) => {
 });
 
 mailApp.listen(process.env.PORT_MAIL_MANAGER, () => {
-    //logger.info(`server running on port ${process.env.PORT_AUTH_MANAGER}`)
+    logger.info(`Service pn.manager.mail on port ${process.env.PORT_AUTH_MANAGER}`)
 })

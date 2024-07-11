@@ -27,5 +27,5 @@ mailApp.get('/dapr/subscribe', (_req, res) => {
 });
 
 mailApp.listen(process.env.PORT_MAIL_ACCESSOR, async () => {
-    logger.info(`server running on port ${process.env.PORT_MAIL_ACCESSOR}`)
+    logger.info(`Service pn.accessor.mail on port ${process.env.PORT_MAIL_ACCESSOR}`)
 });

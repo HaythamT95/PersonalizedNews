@@ -6,8 +6,11 @@ const preferencesController = express.Router();
 
 preferencesController.get('/preferences/:id', async (req, res) => {
     try {
-        const user = await userData(req.params.id);
         logger.info(`${req.method}-${req.originalUrl}`)
+
+        const user = await userData(req.params.id);
+        logger.info(`${req.method}-${req.originalUrl}: Retrieved user`)
+
         res.status(200).json({ user });
     } catch (err) {
         if (err.message === 'User not found') {
@@ -24,11 +27,13 @@ preferencesController.get('/preferences/:id', async (req, res) => {
 //create/replace preferences
 preferencesController.post('/add-preferences', async (req, res) => {
     try {
+        logger.info(`${req.method}-${req.originalUrl}`)
+
         const { userID, preferences } = req.body.data;
 
         await addPreferences(userID, preferences);
         
-        logger.info(`${req.method}-${req.originalUrl}`)
+        logger.info(`${req.method}-${req.originalUrl}: Successfully created preferences`)
 
         res.sendStatus(201);
     } catch (err) {
@@ -45,11 +50,14 @@ preferencesController.post('/add-preferences', async (req, res) => {
 //Add preferences
 preferencesController.patch('/update-preferences/:id', async (req, res) => {
     try {
+        logger.info(`${req.method}-${req.originalUrl}`)
+
         const userID = req.params.id;
         const preferences = req.body;
 
         const user = await updatePreferences(userID, preferences);
-        logger.info(`${req.method}-${req.originalUrl}`)
+        
+        logger.info(`${req.method}-${req.originalUrl}: Successfully updated preferences`)
 
         res.status(200).json({ user });
 
@@ -67,11 +75,14 @@ preferencesController.patch('/update-preferences/:id', async (req, res) => {
 //Remove specific preference from news OR tech
 preferencesController.delete('/delete-preferences/:id', async (req, res) => {
     try {
+        logger.info(`${req.method}-${req.originalUrl}`)
+
         const userID = req.params.id;
         const { type, preferences } = req.body;
 
         const user = await deletePreference(userID, type, preferences);
-        logger.info(`${req.method}-${req.originalUrl}`)
+
+        logger.info(`${req.method}-${req.originalUrl}: Successfully deleted preferences`)
 
         res.status(200).json({ user });
 
