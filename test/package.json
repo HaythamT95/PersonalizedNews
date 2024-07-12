@@ -1,0 +1,18 @@
+{
+    "name": "integration-tests",
+    "type": "module",
+    "version": "1.0.0",
+    "scripts": {
+        "test-register": "mocha **/register.test.js --timeout 10000",
+        "test-login": "mocha **/login.test.js --timeout 10000",
+        "test-addpreferences": "mocha **/add.test.js --timeout 10000",
+        "test-updatepreferences": "mocha **/update.test.js --timeout 10000",
+        "test-deletepreferences": "mocha **/delete.test.js --timeout 10000"
+
+    },
+    "dependencies": {
+        "axios": "^0.21.1",
+        "chai": "^4.3.4",
+        "mocha": "^8.3.2"
+    }
+}
