@@ -1,5 +1,4 @@
 import express from "express";
-import axios from "axios"
 import logger from "../utils/logger.js"
 import { DaprClient, HttpMethod } from "@dapr/dapr";
 
@@ -47,17 +46,25 @@ authController.post('/register', async (req, res) => {
 
     try {
         logger.info(`${req.method}-${req.originalUrl} Body elements: ${firstName} ${lastName} ${email} ${password}`)
-        const pubSubName = "adduserpubsub";
-        const pubSubTopic = "addUser";
-        
-        await axios.post(`${daprHost}:${daprPort}/v1.0/publish/${pubSubName}/${pubSubTopic}`, req.body);
 
-        logger.info(`${req.method}-${req.originalUrl}: Sent to add user service`)
+        const serviceRegisterAppId = 'pnaccessorauth'
+        const serviceRegisterMethod = '/auth/register'
 
-        res.status(200).send("Request to register has been sent :)")
+        await client.invoker.invoke(serviceRegisterAppId, serviceRegisterMethod, HttpMethod.POST, req.body);
+
+        logger.info(`${req.method}-${req.originalUrl} User created successfully`)
+        res.status(201).send("User created successfully")
     } catch (err) {
-        logger.error(`${req.method}-${req.originalUrl}: ${err.message}`)
-        return res.status(500).json({ error: err })
+        const errorInfo = JSON.parse(err.message);
+        const statusCode = errorInfo.status;
+
+        if(statusCode === 409){
+            logger.error(`${req.method}-${req.originalUrl} Email is taken`)
+            res.status(409).json({ error: 'Email is taken' });
+        }else{
+            logger.error(`${req.method}-${req.originalUrl}: ${err.message}`)
+            res.status(500).json({ error: 'Internal Server Error' })
+        }   
     }
 })
 
