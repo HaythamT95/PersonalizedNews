@@ -8,7 +8,7 @@ authController.post('/register', async (req, res) => {
     try {
         logger.info(`${req.method}-${req.originalUrl}`)
 
-        const { firstName, lastName, email, password } = req.body.data;
+        const { firstName, lastName, email, password } = req.body;
 
         await createUser({ firstName, lastName, email, password });
 
@@ -22,7 +22,7 @@ authController.post('/register', async (req, res) => {
         }
         else{
             logger.error(`${req.method}-${req.originalUrl}: ${err.message}`)
-            return res.status(500).json({ error: err })
+            res.status(500).json({ error: err })
         }
     }
 })
