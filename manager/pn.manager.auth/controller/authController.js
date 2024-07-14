@@ -50,10 +50,10 @@ authController.post('/register', async (req, res) => {
         const serviceRegisterAppId = 'pnaccessorauth'
         const serviceRegisterMethod = '/auth/register'
 
-        await client.invoker.invoke(serviceRegisterAppId, serviceRegisterMethod, HttpMethod.POST, req.body);
+        const user = await client.invoker.invoke(serviceRegisterAppId, serviceRegisterMethod, HttpMethod.POST, req.body);
 
         logger.info(`${req.method}-${req.originalUrl} User created successfully`)
-        res.status(201).send("User created successfully")
+        res.status(201).json({ user: user })
     } catch (err) {
         const errorInfo = JSON.parse(err.message);
         const statusCode = errorInfo.status;

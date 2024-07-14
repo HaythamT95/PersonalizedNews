@@ -28,6 +28,7 @@ const Authentication = () => {
             password: !signUpData.password,
         };
         setSignUpErrors(errors);
+        setTimeout(() => setSignUpErrors(''), 5000);
         return !Object.values(errors).includes(true);
     };
 
@@ -37,6 +38,7 @@ const Authentication = () => {
             password: !signInData.password,
         };
         setSignInErrors(errors);
+        setTimeout(() => setSignInErrors(''), 5000);
         return !Object.values(errors).includes(true);
     };
 
@@ -62,8 +64,19 @@ const Authentication = () => {
                 },
                 body: JSON.stringify(signUpData)
             });
-
             console.log(response)
+
+            if (response.ok) {
+                const data = await response.json();
+                localStorage.setItem('userData', JSON.stringify(data.user))
+                router.push('/homepage');
+            } else if (response.status === 409) {
+                setLoginError('Email already exists');
+                setTimeout(() => setLoginError(''), 5000);
+            } else {
+                setLoginError('Server error');
+                setTimeout(() => setLoginError(''), 5000);
+            }
         }
 
     };
@@ -87,8 +100,10 @@ const Authentication = () => {
                 router.push('/homepage');
             } else if (response.status === 404 || response.status === 401) {
                 setLoginError('Wrong email or password');
+                setTimeout(() => setLoginError(''), 5000);
             } else {
                 setLoginError('Server error');
+                setTimeout(() => setLoginError(''), 5000);
             }
         }
     };
@@ -133,6 +148,7 @@ const Authentication = () => {
                             className={`${signUpErrors.firstName || signUpErrors.lastName || signUpErrors.email || signUpErrors.password ? 'error' : ''}`}
                         />
                         {(signUpErrors.firstName || signUpErrors.lastName || signUpErrors.email || signUpErrors.password) && <p className="error-message">Please fill all fields</p>}
+                        {loginError !=='' && <p className="error-message">{loginError}</p>}
                         <button type="submit">Sign Up</button>
                     </form>
                 </div>
