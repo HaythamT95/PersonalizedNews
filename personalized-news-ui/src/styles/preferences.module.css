@@ -92,13 +92,13 @@ option {
     font-size: 14px;
 }
 
-.center-div {
+.centerdiv {
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
-.submit-btn {
+.submitbtn {
     background-color: #512da8;
     color: #fff;
     font-size: 12px;
@@ -114,7 +114,7 @@ option {
     align-items: center;
 }
 
-.error-message {
+.errormessage {
     color: red;
     margin-top: 5px;
     font-size: 0.9em;

@@ -1,6 +1,5 @@
-'use client'
-import { useEffect, useState } from 'react';
-// import './preferences.css'
+import React, { useEffect, useState } from 'react';
+import styles from '../styles/preferences.module.css'
 
 const Preferences = () => {
     const [user, setUser] = useState(null)
@@ -24,7 +23,6 @@ const Preferences = () => {
         const inputGroup = document.querySelector('.inp-group');
         setInputCount(inputGroup.querySelectorAll('.flex').length);
     }, []);
-
 
     function populatePreferences(preferencesArray, type) {
         if (preferencesArray) {
@@ -68,25 +66,26 @@ const Preferences = () => {
         name.placeholder = "Enter name";
         name.value = nameValue;
 
-        const btn = document.createElement('a');
-        btn.className = "delete";
-        btn.innerHTML = "&times;";
+        const btnDelete = document.createElement('a');
+        btnDelete.className = styles.delete;
+        btnDelete.innerHTML = "&times;";
 
-        btn.addEventListener('click', function () {
+        btnDelete.addEventListener('click', function () {
             this.parentElement.remove();
             setInputCount(inputCount => inputCount - 1);
         });
 
         const flex = document.createElement('div');
-        flex.className = "flex";
+        flex.className = `${styles.flex} flex`
 
         flex.appendChild(type);
         flex.appendChild(name);
-        flex.appendChild(btn);
+        flex.appendChild(btnDelete);
 
         inputGroup.appendChild(flex);
         setInputCount(inputCount + 1);
     }
+
 
     async function submitPreferences() {
         const inputGroup = document.querySelector('.inp-group');
@@ -128,7 +127,7 @@ const Preferences = () => {
             });
 
             if (response.ok) {
-                console.log('Preferences saved successfully');
+
                 const updatedUserData = {
                     ...user,
                     user: {
@@ -155,19 +154,19 @@ const Preferences = () => {
     }
 
     return (
-        <div className='container'>
-            <div className='wrap'>
+        <div className={styles.container}>
+            <div className={styles.wrap}>
                 <h1>Preferences</h1>
-                <a href="#" className='add' onClick={addInput}>&#43;</a>
+                <a href="#" className={styles.add} onClick={addInput}>&#43;</a>
             </div>
             <div className='inp-group'>
 
             </div>
-            {msgUpdate && <div className='center-div'><p className="error-message">{msgUpdate}</p></div>}
+            {msgUpdate && <div className={styles.centerdiv}><p className={styles.errormessage}>{msgUpdate}</p></div>}
 
             {inputCount > 0 &&
-                <div className='center-div'>
-                    <button type="submit" className='submit-btn' onClick={submitPreferences}>Submit</button>
+                <div className={styles.centerdiv}>
+                    <button type="submit" className={styles.submitbtn} onClick={submitPreferences}>Submit</button>
                 </div>}
         </div>
     )

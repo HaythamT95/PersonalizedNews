@@ -1,4 +1,4 @@
-.sendmail-btn {
+.sendmailbtn {
     background-color: #8bc34a; 
     color: #fff;
     font-size: 12px;
@@ -17,6 +17,6 @@
     margin: 10px;
 }
 
-.sendmail-btn:hover {
+.sendmailbtn:hover {
     background-color: #5b9717; 
 }
