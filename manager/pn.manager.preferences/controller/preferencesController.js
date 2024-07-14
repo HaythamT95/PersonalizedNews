@@ -35,12 +35,12 @@ preferencesController.get('/preferences/:id', async (req, res) => {
     "techUpdates": ["Samsung"]
     }
 */
-preferencesController.post('/add-preferences/:id', async (req, res) => {
+preferencesController.post('/create-or-replace-preferences/:id', async (req, res) => {
     try {
         logger.info(`${req.method}-${req.originalUrl}`)
 
-        const pubSubName = "addpreferencepubsub";
-        const pubSubTopic = "add-preferences";
+        const pubSubName = "createorreplacepreferencepubsub";
+        const pubSubTopic = "create-or-replace-preferences";
 
         const message = {
             userID: req.params.id,

@@ -58,13 +58,13 @@ authController.post('/register', async (req, res) => {
         const errorInfo = JSON.parse(err.message);
         const statusCode = errorInfo.status;
 
-        if(statusCode === 409){
+        if (statusCode === 409) {
             logger.error(`${req.method}-${req.originalUrl} Email is taken`)
             res.status(409).json({ error: 'Email is taken' });
-        }else{
+        } else {
             logger.error(`${req.method}-${req.originalUrl}: ${err.message}`)
             res.status(500).json({ error: 'Internal Server Error' })
-        }   
+        }
     }
 })
 
@@ -97,10 +97,21 @@ authController.post('/login', async (req, res) => {
 
         logger.info(`${req.method}-${req.originalUrl}: Retrieved user`)
 
-        res.status(200).send(user);
+        res.status(200).json({ user: user });
     } catch (err) {
-        logger.error(`${req.method}-${req.originalUrl}: ${err.message}`)
-        res.status(500).json({ error: 'Internal Server Error' });
+        const errorInfo = JSON.parse(err.message);
+        const statusCode = errorInfo.status;
+
+        if (statusCode === 404) {
+            logger.error(`${req.method}-${req.originalUrl} User not found`)
+            res.status(409).json({ error: 'User not found' });
+        } else if (statusCode === 401) {
+            logger.error(`${req.method}-${req.originalUrl} Wrong password`)
+            res.status(409).json({ error: 'Wrong password' });
+        } else {
+            logger.error(`${req.method}-${req.originalUrl}: ${err.message}`)
+            res.status(500).json({ error: 'Internal Server Error' });
+        }
     }
 })
 

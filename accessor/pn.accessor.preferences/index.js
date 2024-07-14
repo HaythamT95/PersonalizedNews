@@ -25,9 +25,9 @@ preferencesApp.use('/user', preferencesController)
 preferencesApp.get('/dapr/subscribe', (_req, res) => {
     res.json([
         {
-            pubsubname: "addpreferencepubsub",
-            topic: "add-preferences",
-            route: `user/add-preferences`
+            pubsubname: "createorreplacepreferencepubsub",
+            topic: "create-or-replace-preferences",
+            route: `user/create-or-replace-preferences`
         }
     ]);
 });

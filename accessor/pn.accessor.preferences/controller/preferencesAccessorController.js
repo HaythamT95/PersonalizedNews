@@ -1,6 +1,6 @@
 import express from "express";
 import logger from "../utils/logger.js";
-import { userData, addPreferences, updatePreferences, deletePreference } from "../service/userService.js";
+import { userData, createOrReplacePreferences, updatePreferences, deletePreference } from "../service/userService.js";
 
 const preferencesController = express.Router();
 
@@ -25,13 +25,13 @@ preferencesController.get('/preferences/:id', async (req, res) => {
 })
 
 //create/replace preferences
-preferencesController.post('/add-preferences', async (req, res) => {
+preferencesController.post('/create-or-replace-preferences', async (req, res) => {
     try {
         logger.info(`${req.method}-${req.originalUrl}`)
 
         const { userID, preferences } = req.body.data;
 
-        await addPreferences(userID, preferences);
+        await createOrReplacePreferences(userID, preferences);
         
         logger.info(`${req.method}-${req.originalUrl}: Successfully created preferences`)
 

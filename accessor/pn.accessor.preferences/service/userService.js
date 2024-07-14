@@ -10,7 +10,7 @@ const userData = async (userID) => {
     return user;
 }
 
-const addPreferences = async (userID, preferences) => {
+const createOrReplacePreferences = async (userID, preferences) => {
     const { newsCategories, techUpdates } = preferences;
     const user = await User.findById(userID);
 
@@ -68,4 +68,4 @@ const deletePreference = async (userID, type, preferences) => {
     return user;
 };
 
-export { userData, updatePreferences, addPreferences, deletePreference };
+export { userData, updatePreferences, createOrReplacePreferences, deletePreference };
