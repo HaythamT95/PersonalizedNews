@@ -1,9 +1,8 @@
 'use client'
-
+// import './homepage.css'
 import Preferences from './preferences.js';
 import { useRouter } from 'next/navigation';
-import SendMail from './sendMail.js';
-import './homepage.css'
+import SendMail from './sendmail.js';
 
 
 const HomePage = () => {

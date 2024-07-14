@@ -1,6 +1,6 @@
 
 'use client'
-import './sendMail.css'
+// import './sendMail.css'
 
 const SendMail = () => {
 

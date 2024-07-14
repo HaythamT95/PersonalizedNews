@@ -2,7 +2,6 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { setCookie } from 'cookies-next';
-import './authentication.css'
 
 const Authentication = () => {
     const router = useRouter(); 

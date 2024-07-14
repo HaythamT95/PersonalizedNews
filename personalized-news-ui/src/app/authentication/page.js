@@ -1,5 +1,6 @@
 
 'use client'
+import './authentication.css'
 
 import Authentication from './authentication.js'; 
 

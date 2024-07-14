@@ -1,6 +1,6 @@
 'use client'
 import { useEffect, useState } from 'react';
-import './preferences.css'
+// import './preferences.css'
 
 const Preferences = () => {
     const [user, setUser] = useState(null)
