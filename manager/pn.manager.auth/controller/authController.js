@@ -104,10 +104,10 @@ authController.post('/login', async (req, res) => {
 
         if (statusCode === 404) {
             logger.error(`${req.method}-${req.originalUrl} User not found`)
-            res.status(409).json({ error: 'User not found' });
+            res.status(404).json({ error: 'User not found' });
         } else if (statusCode === 401) {
             logger.error(`${req.method}-${req.originalUrl} Wrong password`)
-            res.status(409).json({ error: 'Wrong password' });
+            res.status(401).json({ error: 'Wrong password' });
         } else {
             logger.error(`${req.method}-${req.originalUrl}: ${err.message}`)
             res.status(500).json({ error: 'Internal Server Error' });
