@@ -55,7 +55,7 @@ const Authentication = () => {
             await fetch('http://localhost:5556/auth/register', {
                 method:'POST',
                 headers: {
-                    'Content-Type': 'application/json'  // Set the Content-Type header to application/json
+                    'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(signUpData)
             });
@@ -63,11 +63,25 @@ const Authentication = () => {
 
     };
 
-    const handleSignIn = (e) => {
+    const handleSignIn = async (e) => {
         e.preventDefault();
         if (validateSignIn()) {
-            // Handle Sign In logic here
-            console.log('Sign In Data:', signInData);
+
+            const response = await fetch('http://localhost:5556/auth/login', {
+                method:'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(signInData)
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                console.log(data.user);
+                localStorage.setItem('userData', JSON.stringify(data.user))
+            } else {
+                console.error('Login failed:', response.status, response.statusText);
+            }
         }
     };
 
