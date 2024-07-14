@@ -1,10 +1,5 @@
-.home-page {
-    position: relative; 
-    padding: 20px;
-}
-
-.logout-btn {
-    background-color: #f44336; 
+.sendmail-btn {
+    background-color: #8bc34a; 
     color: #fff;
     font-size: 12px;
     padding: 10px 20px; 
@@ -15,13 +10,13 @@
     text-transform: uppercase;
     position: absolute; 
     top: 20px; 
-    right: 20px; 
+    left: 20px; 
     cursor: pointer; 
     justify-content: center;
     align-items: center; 
     margin: 10px;
 }
 
-.logout-btn:hover {
-    background-color: #d32f2f; 
+.sendmail-btn:hover {
+    background-color: #5b9717; 
 }

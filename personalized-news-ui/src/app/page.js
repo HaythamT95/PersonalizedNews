@@ -9,7 +9,7 @@ const Initial = () => {
 
     useEffect(() => {
         const value = localStorage.getItem('userData');
-
+        console.log(value)
         if (value) {
             router.push('/homepage');
         } else {

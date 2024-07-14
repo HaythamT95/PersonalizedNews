@@ -1,15 +1,18 @@
 
 import React, { useState } from 'react';
-import Head from 'next/head';
+import { useRouter } from 'next/navigation';
 import { setCookie } from 'cookies-next';
 import './authentication.css'
 
 const Authentication = () => {
+    const router = useRouter(); 
+
     const [active, setActive] = useState(false);
     const [signUpData, setSignUpData] = useState({ firstName: '', lastName: '', email: '', password: '' });
     const [signInData, setSignInData] = useState({ email: '', password: '' });
     const [signUpErrors, setSignUpErrors] = useState({ firstName: false, lastName: false, email: false, password: false });
     const [signInErrors, setSignInErrors] = useState({ email: false, password: false });
+    const [loginError, setLoginError] = useState()
 
     const handleToggle = () => {
         setActive(!active);
@@ -52,13 +55,15 @@ const Authentication = () => {
         if (validateSignUp()) {
             console.log('Sign Up Data:', signUpData);
 
-            await fetch('http://localhost:5556/auth/register', {
-                method:'POST',
+            const response = await fetch('http://localhost:5556/auth/register', {
+                method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(signUpData)
             });
+
+            console.log(response)
         }
 
     };
@@ -68,7 +73,7 @@ const Authentication = () => {
         if (validateSignIn()) {
 
             const response = await fetch('http://localhost:5556/auth/login', {
-                method:'POST',
+                method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
@@ -77,19 +82,20 @@ const Authentication = () => {
 
             if (response.ok) {
                 const data = await response.json();
-                console.log(data.user);
                 localStorage.setItem('userData', JSON.stringify(data.user))
+                console.log(data.user)
+                router.push('/homepage');
+            } else if (response.status === 404 || response.status === 401) {
+                setLoginError('Wrong email or password');
             } else {
-                console.error('Login failed:', response.status, response.statusText);
+                setLoginError('Server error');
             }
         }
     };
 
     return (
         <div>
-            <Head>
-                <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-            </Head>
+
             <div className={`container ${active ? 'active' : ''} `} id="container">
                 <div className={`form-container sign-up `}>
                     <form onSubmit={handleSignUp}>
@@ -150,6 +156,7 @@ const Authentication = () => {
                             className={`${signInErrors.email || signInErrors.password ? 'error' : ''}`}
                         />
                         {(signInErrors.email || signInErrors.password) && <p className="error-message">Please fill all fields</p>}
+                        {loginError !=='' && <p className="error-message">{loginError}</p>}
                         <button type="submit">Sign In</button>
                     </form>
                 </div>
