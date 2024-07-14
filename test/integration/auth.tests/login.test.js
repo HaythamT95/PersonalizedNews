@@ -14,8 +14,8 @@ describe('Login Service Integration Tests', function () {
         };
         const response = await axios.post(`${authUrl}/auth/login`, user);
         expect(response.status).to.equal(200);
-        expect(response.data.user.firstName).to.equal(user.firstName);
-        expect(response.data.user.lastName).to.equal(user.lastName);
-        expect(response.data.user.email).to.equal(user.email);
+        expect(response.data.user.user.firstName).to.equal(user.firstName);
+        expect(response.data.user.user.lastName).to.equal(user.lastName);
+        expect(response.data.user.user.email).to.equal(user.email);
     });
 });

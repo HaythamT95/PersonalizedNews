@@ -14,7 +14,10 @@ describe('Register Service Integration Tests', function () {
         };
 
         const response = await axios.post(`${authUrl}/auth/register`, user);
-        expect(response.status).to.equal(200);
+        expect(response.status).to.equal(201);
+        expect(response.data.user.user.firstName).to.equal(user.firstName);
+        expect(response.data.user.user.lastName).to.equal(user.lastName);
+        expect(response.data.user.user.email).to.equal(user.email);
     });
 
     it('should not register a user with an empty field', async function () {

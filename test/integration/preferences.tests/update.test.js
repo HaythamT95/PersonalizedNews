@@ -1,3 +1,4 @@
+
 import axios from "axios"
 import chai from "chai"
 
@@ -20,7 +21,7 @@ describe('Preference Service Integration Tests', function () {
             techUpdates: ["Apple"]
         };
 
-        const response = await axios.patch(`${preferencesUrl}/user/update-preferences/${userData.data.user._id}`, preferences);
+        const response = await axios.patch(`${preferencesUrl}/user/update-preferences/${userData.data.user.user._id}`, preferences);
 
         expect(response.status).to.equal(200);
 

@@ -19,7 +19,7 @@ describe('Preference Service Integration Tests', function () {
             techUpdates: ["Samsung"]
         };
 
-        const response = await axios.post(`${preferencesUrl}/user/add-preferences/${userData.data.user._id}`, preferences);
+        const response = await axios.post(`${preferencesUrl}/user/create-or-replace-preferences/${userData.data.user.user._id}`, preferences);
 
         expect(response.status).to.equal(200);
 
@@ -27,7 +27,7 @@ describe('Preference Service Integration Tests', function () {
 
         const userPreferences = await axios.post(`${authUrl}/auth/login`, user);
 
-        const { newsCategories, techUpdates } = userPreferences.data.user.preferences;
+        const { newsCategories, techUpdates } = userPreferences.data.user.user.preferences;
         expect(newsCategories[0]).to.equal("Football");
         expect(techUpdates[0]).to.equal("Samsung");
 
