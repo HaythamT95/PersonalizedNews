@@ -10,12 +10,14 @@ async function createUser ({ firstName, lastName, email, password }){
 
     const hashedPassword = await hashPassword(password);
 
-    await new User({
+    const user = await new User({
         firstName: firstName,
         lastName: lastName,
         email: email,
         password: hashedPassword
     }).save()
+
+    return user;
 }
 
 const loginUser = async ({ email, password }) => {

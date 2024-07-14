@@ -10,17 +10,17 @@ authController.post('/register', async (req, res) => {
 
         const { firstName, lastName, email, password } = req.body;
 
-        await createUser({ firstName, lastName, email, password });
+        const user = await createUser({ firstName, lastName, email, password });
 
         logger.info(`${req.method}-${req.originalUrl} User created successfully`)
 
-        res.sendStatus(201);
+        res.status(201).json({ user: user });
     } catch (err) {
         if (err.message === 'Email is taken') {
             logger.error(`${req.method}-${req.originalUrl}: ${err.message}`)
             res.status(409).json({ error: 'Email is taken' });
         }
-        else{
+        else {
             logger.error(`${req.method}-${req.originalUrl}: ${err.message}`)
             res.status(500).json({ error: err })
         }
