@@ -4,7 +4,6 @@ metadata:
   name: myresiliency
 scopes:
   - pnmanagerauth
-  - pnmanagerainews
   - pnmanagerpreferences
   - pnmanagermail
 

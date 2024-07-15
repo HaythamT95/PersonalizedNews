@@ -109,46 +109,6 @@ services:
       - pn.manager.preferences
     network_mode: "service:pn.manager.preferences"
 
-  pn.manager.ai.news:
-    build:
-        context: .
-        dockerfile: manager/pn.manager.ai.news/Dockerfile
-    container_name: pn.manager.ai.news
-    ports:
-        - "5558:5558"
-    environment:
-        - PORT_AINEWS_MANAGER=5558
-        - RABBITMQ_URL=amqp://guest:guest@rabbitmq:5672
-    depends_on:
-      rabbitmq:
-          condition: service_healthy
-    networks:
-        - network-dapr
-    volumes:
-      - ./manager/logs:/usr/src/app/logs
-  
-  pn.manager.ai.news.dapr:
-    image: "daprio/daprd:edge"
-    deploy:
-      restart_policy:
-        condition: on-failure
-        delay: 5s
-        max_attempts: 10
-        window: 120s
-    command: ["./daprd",
-        "--app-port", "5558",
-        "--app-id", "pnmanagerainews",
-        "--app-protocol", "http",
-        "--dapr-http-port", "3500",
-        "--resources-path", "./dapr/components",
-        "--config", "./dapr/config.yaml"
-        ]
-    volumes:
-      - "./dapr/:/dapr"
-    depends_on:
-      - pn.manager.ai.news
-    network_mode: "service:pn.manager.ai.news"
-
   pn.manager.mail:
     build:
         context: .
@@ -426,7 +386,9 @@ services:
       - "./dapr/:/dapr"
     depends_on:
       - pn.engine.asyncmail
-      - pn.manager.ai.news
+      - pn.accessor.ai
+      - pn.accessor.news
+      - pn.accessor.mail
     network_mode: "service:pn.engine.asyncmail"
 
 volumes:
