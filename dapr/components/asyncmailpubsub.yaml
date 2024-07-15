@@ -11,3 +11,5 @@ spec:
 scopes:
   - pnmanagermail
   - pnengineasyncmail
+  - pnaccessornews
+  - pnaccessorai
