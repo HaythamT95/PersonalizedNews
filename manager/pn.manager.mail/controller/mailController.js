@@ -7,19 +7,18 @@ const mailController = express.Router();
 const daprHost = "http://localhost";
 const daprPort = "3500";
 
-mailController.post('/send-mail/:id', async (req, res) => {
+mailController.post('/send-mail', async (req, res) => {
     try {
         logger.info(`${req.method}-${req.originalUrl}`)
 
-        const userID = req.params.id;
-        const { email } = req.body;
+        const { email, preferences } = req.body;
 
         const pubSubName = "asyncmailpubsub";
         const pubSubTopic = "async-mail";
 
         const message = {
-            userID: userID,
-            email: email
+            email: email,
+            preferences: preferences
         }
 
         await axios.post(`${daprHost}:${daprPort}/v1.0/publish/${pubSubName}/${pubSubTopic}`, message);
