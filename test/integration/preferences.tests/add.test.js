@@ -23,7 +23,7 @@ describe('Preference Service Integration Tests', function () {
 
         expect(response.status).to.equal(200);
 
-        await new Promise(resolve => setTimeout(resolve, 10)); //Added this to make sure data been added to db because it is implemented in pub/sub
+        await new Promise(resolve => setTimeout(resolve, 1000)); //Added this to make sure data been added to db because it is implemented in pub/sub
 
         const userPreferences = await axios.post(`${authUrl}/auth/login`, user);
 

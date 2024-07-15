@@ -18,4 +18,30 @@ describe('Login Service Integration Tests', function () {
         expect(response.data.user.user.lastName).to.equal(user.lastName);
         expect(response.data.user.user.email).to.equal(user.email);
     });
+
+    it('should return not found', async function () {
+        const user = {
+            email: 'not_registered@gmail.com',
+            password: '123'
+        };
+        try {
+            await axios.post(`${authUrl}/auth/login`, user);
+        } catch (error) {
+            expect(error.response.status).to.equal(404);
+            expect(error.response.data).to.have.property('error', 'User not found');
+        }
+    });
+
+    it('should return wrong password', async function () {
+        const user = {
+            email: 'aaabbb@gmail.com',
+            password: '1'
+        };
+        try {
+            await axios.post(`${authUrl}/auth/login`, user);
+        } catch (error) {
+            expect(error.response.status).to.equal(401);
+            expect(error.response.data).to.have.property('error', 'Wrong password');
+        }
+    });
 });

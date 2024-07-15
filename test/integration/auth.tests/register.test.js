@@ -35,4 +35,20 @@ describe('Register Service Integration Tests', function () {
             expect(error.response.data).to.have.property('error', 'firstName is required');
         }
     });
+
+    it('should not register a user with already existing email', async function () {
+        const user = {
+            firstName: 'AAA',
+            lastName: 'BBB2',
+            email: 'aaabbb2@gmail.com',
+            password: '123'
+        };
+
+        try {
+            await axios.post(`${authUrl}/auth/register`, user);
+        } catch (error) {
+            expect(error.response.status).to.equal(409);
+            expect(error.response.data).to.have.property('error', 'Email is taken');
+        }
+    });
 });
