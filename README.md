@@ -1,7 +1,7 @@
 # Personalized News Aggregator with AI
 
 ## System Diagram
-<img src="./img/PersonalizedNewsDiagram.jpg" width="60%"/>
+<img src="./system-diagram/PersonalizedNewsDiagram.jpg" width="60%"/>
 
 ## Technologies Used
 - **Backend**: Node.js, Express.js, Dapr, Docker.
