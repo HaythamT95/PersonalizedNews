@@ -389,6 +389,46 @@ services:
       - pn.accessor.mail
     network_mode: "service:pn.accessor.mail"
 
+  pn.engine.asyncmail:
+    build:
+      context: .
+      dockerfile: engine/pn.engine.asyncmail/Dockerfile
+    container_name: pn.engine.asyncmail
+    ports:
+      - "5565:5565"
+    environment:
+      - PORT_MAIL_ENGINE=5565
+    depends_on:
+        rabbitmq:
+          condition: service_healthy
+    networks:
+      - network-dapr
+    volumes:
+      - ./engine/logs:/usr/src/app/logs
+    
+  pn.engine.asyncmail.dapr:
+    image: "daprio/daprd:edge"
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 10
+        window: 120s
+    command: ["./daprd",
+        "--app-port", "5565",
+        "--app-id", "pnengineasyncmail",
+        "--app-protocol", "http",
+        "--dapr-http-port", "3500",
+        "--resources-path", "./dapr/components",
+        "--config", "./dapr/config.yaml"
+        ]
+    volumes:
+      - "./dapr/:/dapr"
+    depends_on:
+      - pn.engine.asyncmail
+      - pn.manager.ai.news
+    network_mode: "service:pn.engine.asyncmail"
+
 volumes:
   mongo-data:
 

@@ -10,3 +10,4 @@ spec:
     value: "amqp://guest:guest@rabbitmq:5672"
 scopes:
   - pnmanagermail
+  - pnengineasyncmail
