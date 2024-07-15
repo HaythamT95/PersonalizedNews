@@ -8,6 +8,8 @@
 
 - **Frontend**: React.js.
 
+- **Database**: MongoDB.
+
 - **APIs**: Gemini API for summarized news, APILayer for news.
 
 - **More**: Postman, Integration tests.
