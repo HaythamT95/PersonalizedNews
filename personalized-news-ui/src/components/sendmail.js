@@ -13,18 +13,18 @@ const SendMail = () => {
                 alert("Please add atleast one preference")
                 return;
             }
-            if (parsedUserData.user && parsedUserData.user._id && parsedUserData.user.email) {
-                const userID = parsedUserData.user._id;
-                const email = {
-                    email: parsedUserData.user.email
+            if (parsedUserData.user && parsedUserData.user.email) {
+                const data = {
+                    email: parsedUserData.user.email,
+                    preferences: parsedUserData.user.preferences
                 };
 
-                const response = await fetch(`http://localhost:5559/mail/send-mail/${userID}`, {
+                const response = await fetch(`http://localhost:5559/mail/send-mail`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify(email)
+                    body: JSON.stringify(data)
                 })
 
                 if (!response.ok) {
